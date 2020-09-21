@@ -1,6 +1,6 @@
 package guru.springframework.msscbeerservice.services;
 
-import guru.springframework.msscbeerservice.controller.NotFoundException;
+import guru.springframework.msscbeerservice.web.controller.NotFoundException;
 import guru.springframework.msscbeerservice.domain.Beer;
 import guru.springframework.msscbeerservice.repositories.BeerRepository;
 import guru.springframework.msscbeerservice.web.mappers.BeerMapper;
@@ -46,17 +46,17 @@ public class BeerServiceImpl implements BeerService {
             beerPage = beerRepository.findAll(pageRequest);
         }
 
-//        if (showInventoryOnHand){
-//            beerPagedList = new BeerPagedList(beerPage
-//                    .getContent()
-//                    .stream()
-//                    .map(beerMapper::beerToBeerDtoWithInventory)
-//                    .collect(Collectors.toList()),
-//                    PageRequest
-//                            .of(beerPage.getPageable().getPageNumber(),
-//                                    beerPage.getPageable().getPageSize()),
-//                    beerPage.getTotalElements());
-//        } else {
+        if (showInventoryOnHand){
+            beerPagedList = new BeerPagedList(beerPage
+                    .getContent()
+                    .stream()
+                    .map(beerMapper::beerToBeerDtoWithInventory)
+                    .collect(Collectors.toList()),
+                    PageRequest
+                            .of(beerPage.getPageable().getPageNumber(),
+                                    beerPage.getPageable().getPageSize()),
+                    beerPage.getTotalElements());
+        } else {
             beerPagedList = new BeerPagedList(beerPage
                     .getContent()
                     .stream()
@@ -66,7 +66,7 @@ public class BeerServiceImpl implements BeerService {
                             .of(beerPage.getPageable().getPageNumber(),
                                     beerPage.getPageable().getPageSize()),
                     beerPage.getTotalElements());
-//        }
+        }
 
         return beerPagedList;
     }
@@ -74,15 +74,15 @@ public class BeerServiceImpl implements BeerService {
     @Cacheable(cacheNames = "beerCache", key = "#beerId", condition = "#showInventoryOnHand == false ")
     @Override
     public BeerDto getById(UUID beerId, Boolean showInventoryOnHand) {
-//        if (showInventoryOnHand) {
-//            return beerMapper.beerToBeerDtoWithInventory(
-//                    beerRepository.findById(beerId).orElseThrow(NotFoundException::new)
-//            );
-//        } else {
+        if (showInventoryOnHand) {
+            return beerMapper.beerToBeerDtoWithInventory(
+                    beerRepository.findById(beerId).orElseThrow(NotFoundException::new)
+            );
+        } else {
             return beerMapper.beerToBeerDto(
                     beerRepository.findById(beerId).orElseThrow(NotFoundException::new)
             );
-//        }
+        }
     }
 
     @Override
