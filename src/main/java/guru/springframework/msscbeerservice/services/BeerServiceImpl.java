@@ -8,6 +8,7 @@ import guru.sfg.brewery.model.BeerDto;
 import guru.sfg.brewery.model.BeerPagedList;
 import guru.sfg.brewery.model.BeerStyleEnum;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 /**
  * Created by jt on 2019-06-06.
  */
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class BeerServiceImpl implements BeerService {
@@ -105,6 +107,12 @@ public class BeerServiceImpl implements BeerService {
     @Cacheable(cacheNames = "beerUpcCache")
     @Override
     public BeerDto getByUpc(String upc) {
+//        log.debug("==== getByUpc: "+upc);
+//        Beer beer = beerRepository.findByUpc(upc);
+//        log.debug("==== getByUpc - beer: "+beer.toString());
+//        BeerDto beerDto = beerMapper.beerToBeerDto(beer);
+//        log.debug("==== getByUpc - beer: "+beerDto.toString());
+//        return beerDto;
         return beerMapper.beerToBeerDto(beerRepository.findByUpc(upc));
     }
 }
